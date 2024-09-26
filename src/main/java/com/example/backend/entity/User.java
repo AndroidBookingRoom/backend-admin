@@ -40,7 +40,7 @@ public class User extends BaseAudits {
 
     @Column(name = "enable")
     @Builder.Default
-    private Boolean enable = Boolean.FALSE;
+    private Boolean enable = Boolean.TRUE;
 
     @Transient
     private Set<Role> roleSet;

@@ -13,10 +13,15 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserRoleServiceImpl implements UserRoleService {
-    private UserRoleRepository  userRoleRepository;
+    private final UserRoleRepository  userRoleRepository;
 
     @Override
     public List<UserRole> getUserRoleByIdUser(Long idUser) {
         return userRoleRepository.findUserRoleByIdUser(idUser);
+    }
+
+    @Override
+    public UserRole save(UserRole userRole) {
+        return userRoleRepository.save(userRole);
     }
 }

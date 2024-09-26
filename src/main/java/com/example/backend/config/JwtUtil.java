@@ -1,12 +1,16 @@
 package com.example.backend.config;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +24,14 @@ import java.util.function.Function;
  */
 @Service
 public class JwtUtil implements Serializable {
-    private static Logger logger = LogManager.getLogger(JwtUtil.class);
-    private String SECRET_KEY = "secret";
+    private static final Logger logger = LogManager.getLogger(JwtUtil.class);
 
-    private static final long serialVersionUID = 1L;
-
-    private static final long JWT_TOKEN_VALIDITY = 60 * 60 * 8;
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
+    @Value("${application.security.jwt.expiration}")
+    private long jwtExpiration;
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private long refreshExpiration;
 
     //    get username from jwt token
     public String extractUsername(String token) {
@@ -50,21 +56,12 @@ public class JwtUtil implements Serializable {
 
     //    for retrieving any information from token we will need the secret key
     private Claims extractAllClaims(String token) {
-        try {
-//            logger.info(Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody());
-            return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            logger.error(e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            logger.error(e.getMessage());
-        } catch (MalformedJwtException e) {
-            logger.error(e.getMessage());
-        } catch (SignatureException e) {
-            logger.error(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error(e.getMessage());
-        }
-        return null;
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     //    check if the token has expired
@@ -88,11 +85,17 @@ public class JwtUtil implements Serializable {
         return Jwts.builder().setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * JWT_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .setIssuer("Xixon-Knight")
                 .setHeaderParam("tokenType", "Bearer ")
                 .setAudience("You")
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+    }
+    // Get the signing key for JWT token
+// Get the signing key for JWT token
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

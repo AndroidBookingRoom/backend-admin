@@ -23,6 +23,8 @@ public class Constants {
     public static class RESPONSE_TYPE {
         public static final String SUCCESS = "SUCCESS";
         public static final String ERROR = "ERROR";
+        public static final String VALIDATION = "VALIDATION";
+        public static final String ACCESS_DENIED = "ACCESS_DENIED";
         public static final String WARNING = "WARNING";
         public static final String CONFIRM = "CONFIRM";
         public static final String invalidPermission = "invalidPermission";
@@ -48,6 +50,7 @@ public class Constants {
         public static final String UPDATE_STATUS_SUCCESS = "updateStatusSuccess";
         public static final String UPDATE_SUCCESS = "updateSuccess";
         public static final String ERROR = "error";
+        public static final String VALIDATION = "validation";
         public static final String WARNING = "warning";
         public static final String RECORD_DELETED = "record.deleted";
         public static final String EMAIL_ADDRESS_DELETED = "emailAddress.deleted";
@@ -77,6 +80,7 @@ public class Constants {
         public static final String SYNC_TAX_SUCCESS = "synctax.success";
         public static final String SYNC_TAX_ERROR = "synctax.error";
     }
+
 
     public static class WARNING_TYPE {
 
