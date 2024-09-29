@@ -4,6 +4,7 @@ import com.example.backend.common.Constants;
 import com.example.backend.config.JwtUtil;
 import com.example.backend.domain.Response;
 import com.example.backend.domain.request.RequestUserDTO;
+import com.example.backend.utils.enums.ErrorCodes;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,6 @@ public class AuthenticateController {
         Map<String, Object> data = new HashMap<>();
         data.put("jwt", jwt);
         data.put("roles", roles);
-        return Response.success(Constants.RESPONSE_CODE.SUCCESS).withData(data);
+        return Response.success(ErrorCodes.SUCCESS.getCode()).withData(data);
     }
 }

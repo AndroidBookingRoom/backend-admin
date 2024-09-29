@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCodes {
     FORBIDDEN("403", "Forbidden"),
     NOT_FOUND("404", "Not Found"),
+    CONFLICT("409", "Conflict record"),
     INTERNAL_SERVER_ERROR("500", "Internal Server Error"),
     BR0001("BR0001", "Validate data"),
     SUCCESS("200", "Successfully!");

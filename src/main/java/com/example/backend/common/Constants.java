@@ -1,6 +1,7 @@
 package com.example.backend.common;
 
-import jakarta.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by NhanNguyen on 1/18/2021
@@ -22,6 +23,8 @@ public class Constants {
 
     public static class RESPONSE_TYPE {
         public static final String SUCCESS = "SUCCESS";
+        public static final String NOT_FOUND = "NOT_FOUND";
+        public static final String CONFLICT = "CONFLICT";
         public static final String ERROR = "ERROR";
         public static final String VALIDATION = "VALIDATION";
         public static final String ACCESS_DENIED = "ACCESS_DENIED";

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @MappedSuperclass
 public class BaseAudits {
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createDate;
 

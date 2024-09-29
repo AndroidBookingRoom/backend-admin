@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +30,22 @@ public class ExceptionHandlingController {
                 ErrorCodes.BR0001.getCode(),ErrorCodes.BR0001.getMessage(), errors);
     }
 
-    @ExceptionHandler({ AuthenticationException.class })
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public @ResponseBody Response handleAuthenticationException(Exception ex)  {
-        return Response.error(Constants.RESPONSE_TYPE.ACCESS_DENIED,
-                ErrorCodes.FORBIDDEN.getCode(), ErrorCodes.FORBIDDEN.getMessage());
+//    @ExceptionHandler({ AuthenticationException.class })
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    public @ResponseBody Response handleAuthenticationException(Exception ex)  {
+//        return Response.error(Constants.RESPONSE_TYPE.ACCESS_DENIED,
+//                ErrorCodes.FORBIDDEN.getCode(), ErrorCodes.FORBIDDEN.getMessage());
+//    }
+
+    @ExceptionHandler({ ResponseStatusException.class })
+    public @ResponseBody Response handlerNotFoundException(ResponseStatusException ex)  {
+        return Response.error(Constants.RESPONSE_TYPE.WARNING,
+                String.valueOf(ex.getStatusCode().value()), ex.getMessage());
     }
 
+    @ExceptionHandler(value = {Exception.class})
+    public @ResponseBody Response handleAnyException(Exception ex) {
+        return Response.error(Constants.RESPONSE_TYPE.ERROR,
+                String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), ex.getMessage());
+    }
 }

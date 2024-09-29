@@ -1,84 +1,63 @@
 package com.example.backend.domain;
 
 import com.example.backend.common.CommonUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 //{"first":0,"rows":2,"sortField":"isUsed","sortOrder":1,"filters":{},"globalFilter":null}
+@Setter
+@Getter
 public class SearchParams {
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the first
+      * @param first the first to set
+     */
     private Integer first;
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the rows
+      * @param rows the rows to set
+     */
     private Integer rows;
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the sortField
+      * @param sortField the sortField to set
+     */
     private String sortField;
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the sortOrder
+      * @param sortOrder the sortOrder to set
+     */
     private Integer sortOrder;
+    /**
+     * -- GETTER --
+     *
+     *
+     * -- SETTER --
+     *
+     @return the globalFilter
+      * @param globalFilter the globalFilter to set
+     */
     private String globalFilter;
-
-    /**
-     * @return the first
-     */
-    public Integer getFirst() {
-        return first;
-    }
-
-    /**
-     * @param first the first to set
-     */
-    public void setFirst(Integer first) {
-        this.first = first;
-    }
-
-    /**
-     * @return the rows
-     */
-    public Integer getRows() {
-        return rows;
-    }
-
-    /**
-     * @param rows the rows to set
-     */
-    public void setRows(Integer rows) {
-        this.rows = rows;
-    }
-
-    /**
-     * @return the sortField
-     */
-    public String getSortField() {
-        return sortField;
-    }
-
-    /**
-     * @param sortField the sortField to set
-     */
-    public void setSortField(String sortField) {
-        this.sortField = sortField;
-    }
-
-    /**
-     * @return the sortOrder
-     */
-    public Integer getSortOrder() {
-        return sortOrder;
-    }
-
-    /**
-     * @param sortOrder the sortOrder to set
-     */
-    public void setSortOrder(Integer sortOrder) {
-        this.sortOrder = sortOrder;
-    }
-
-    /**
-     * @return the globalFilter
-     */
-    public String getGlobalFilter() {
-        return globalFilter;
-    }
-
-    /**
-     * @param globalFilter the globalFilter to set
-     */
-    public void setGlobalFilter(String globalFilter) {
-        this.globalFilter = globalFilter;
-    }
 
     /**
      * Gets the order by clause.
