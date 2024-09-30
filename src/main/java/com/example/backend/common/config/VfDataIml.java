@@ -54,15 +54,20 @@ public class VfDataIml implements VfData {
             if (CommonUtils.isEmpty(dataType)) {
                 log.debug(aliasColumn + " is not defined");
             } else {
-                JavaType hbmType = switch (dataType) {
-                    case "class java.lang.Long" -> LongJavaType.INSTANCE;
-                    case "class java.lang.Integer" -> IntegerJavaType.INSTANCE;
-                    case "class java.lang.Double" -> DoubleJavaType.INSTANCE;
-                    case "class java.lang.String" -> StringJavaType.INSTANCE;
-                    case "class java.lang.Boolean" -> BooleanJavaType.INSTANCE;
-                    case "class java.util.Date" -> TimeZoneJavaType.INSTANCE;
-                    default -> null;
-                };
+                JavaType hbmType = hbmType = null;
+                    if ("class java.lang.Long".equals(dataType)) {
+                        hbmType = LongJavaType.INSTANCE;
+                    } else if ("class java.lang.Integer".equals(dataType)) {
+                        hbmType = IntegerJavaType.INSTANCE;
+                    } else if ("class java.lang.Double".equals(dataType)) {
+                        hbmType = DoubleJavaType.INSTANCE;
+                    } else if ("class java.lang.String".equals(dataType)) {
+                        hbmType = StringJavaType.INSTANCE;
+                    } else if ("class java.lang.Boolean".equals(dataType)) {
+                        hbmType = BooleanJavaType.INSTANCE;
+                    } else if ("class java.util.Date".equals(dataType)) {
+                        hbmType = DateJavaType.INSTANCE;
+                    }
                 if (CommonUtils.isEmpty(hbmType)) {
                     log.debug(dataType + " is not supported");
                 } else {
