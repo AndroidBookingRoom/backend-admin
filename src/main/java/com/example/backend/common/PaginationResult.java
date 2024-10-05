@@ -1,4 +1,4 @@
-package com.example.backend.common.config;
+package com.example.backend.common;
 
 import lombok.Getter;
 import lombok.Setter;

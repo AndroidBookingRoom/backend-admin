@@ -1,8 +1,8 @@
 package com.example.backend.repositorys;
 
 import com.example.backend.common.CommonUtils;
-import com.example.backend.common.config.DataTableResults;
-import com.example.backend.common.config.VfData;
+import com.example.backend.common.DataTableResults;
+import com.example.backend.common.VfData;
 import com.example.backend.domain.response.EventTypeResponseDTO;
 import com.example.backend.entity.EventType;
 import com.example.backend.utils.enums.EventTypes;

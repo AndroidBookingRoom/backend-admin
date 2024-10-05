@@ -1,4 +1,4 @@
-package com.example.backend.common.config;
+package com.example.backend.common;
 
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
@@ -22,20 +22,21 @@ public interface VfData {
     public <T> DataTableResults<T> findPaginationQuery(String nativeQuery, String orderBy, List<Object> paramList, Class obj);
 //    public <T> DataTableResults<T> findPaginationQuery(String nativeQuery, String orderBy, Map<String, String> paramList, Class obj);
 
-    public List findAllByQuery(String nativeQuery, Class obj);
 
     /**
      * Get session.
+     *
      */
     public Session getSession();
 
-    public NativeQuery createSQLQuery(String sql);
-
+    public NativeQuery createNativeQuery(String sql);
     /**
      * ham set result transformer cua cau query
      *
-     * @param query cau query
-     * @param obj   doi tuong
+     * @param query
+     *            cau query
+     * @param obj
+     *            doi tuong
      */
     public void setResultTransformer(NativeQuery query, Class obj);
 

@@ -4,6 +4,7 @@ import com.example.backend.utils.enums.EventTypes;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+
 @Converter(autoApply = true)
 public class EventTypesConverter implements AttributeConverter<EventTypes, String> {
 

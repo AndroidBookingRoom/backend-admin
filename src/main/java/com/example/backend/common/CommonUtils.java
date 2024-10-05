@@ -1,6 +1,8 @@
 package com.example.backend.common;
 
 import com.example.backend.domain.SearchParams;
+import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +25,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Slf4j
 public class CommonUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
     private static final String[] SIGNED_ARR = new String[] { "à", "á", "ạ", "ả", "ã", "â", "ầ", "ấ", "ậ", "ẩ", "ẫ",
             "ă", "ằ", "ắ", "ặ", "ẳ", "ẵ", "è", "é", "ẹ", "ẻ", "ẽ", "ê", "ề", "ế", "ệ", "ể", "ễ", "ì", "í", "ị", "ỉ",
             "ĩ", "ò", "ó", "ọ", "ỏ", "õ", "ô", "ồ", "ố", "ộ", "ổ", "ỗ", "ơ", "ờ", "ớ", "ợ", "ở", "ỡ", "ù", "ú", "ụ",
@@ -155,7 +157,7 @@ public class CommonUtils {
             try {
                 return dateFormat.parse(date);
             } catch (Exception ex) {
-                LOGGER.error("convertStringToDateTime", ex);
+                log.error("convertStringToDateTime", ex);
                 return null;
             }
         }
@@ -204,7 +206,7 @@ public class CommonUtils {
             ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources", new Locale("vi"));
             return rb.getString(key);
         } catch (Exception ex) {
-            LOGGER.error("getApplicationResource:", ex);
+            log.error("getApplicationResource:", ex);
             return "";
         }
 
@@ -222,7 +224,7 @@ public class CommonUtils {
             ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources", new Locale("vi"));
             return String.format(rb.getString(key), args);
         } catch (Exception ex) {
-            LOGGER.error("getApplicationResource:", ex);
+            log.error("getApplicationResource:", ex);
             return "";
         }
 
@@ -380,7 +382,7 @@ public class CommonUtils {
 
                 return df.format(itemValue);
             } catch (Exception ex) {
-                LOGGER.error("formatFrenchNumber", ex);
+                log.error("formatFrenchNumber", ex);
                 return String.valueOf(itemValue);
             }
         } else {
@@ -769,35 +771,6 @@ public class CommonUtils {
         str = "%" + str.trim().toLowerCase().replace("/", "//").replace("_", "/_").replace("%", "/%") + "%";
         return str;
     }
-
-//    /**
-//     * copy properties tu form sang BO va nguoc lai
-//     *
-//     * @param dest
-//     * @param orig
-//     * @throws IllegalAccessException
-//     * @throws InvocationTargetException
-//     * @throws NoSuchMethodException
-//     */
-//    public static void copyProperties(Object dest, Object orig) throws Exception {
-//        BeanUtilsBean beanUtilsBean = getUtilsBean();
-//        beanUtilsBean.copyProperties(dest, orig);
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public static BeanUtilsBean getUtilsBean() {
-//        ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
-//        convertUtilsBean.register(new LongConverter(), Long.class);
-//        convertUtilsBean.register(new DoubleConverter(), Double.class);
-//        convertUtilsBean.register(new StringToDateConverter(), Date.class);
-//        convertUtilsBean.register(new DateToStringConverter(), String.class);
-//        BeanUtilsBean beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
-//        return beanUtilsBean;
-//    }
-
     /**
      * Format so.
      *
@@ -928,7 +901,7 @@ public class CommonUtils {
                 return "";
             }
         } catch (Exception e) {
-            LOGGER.error("convertListToString:", e);
+            log.error("convertListToString:", e);
             throw e;
         }
     }
@@ -943,22 +916,22 @@ public class CommonUtils {
         return null;
     }
 
-//    /**
-//     * Convert Object To String Json
-//     *
-//     * @param object
-//     * @return
-//     */
-//    public static String convertObjectToStringJson(Object object) {
-//        String strMess = "";
-//        try {
-//            Gson gson = new Gson();
-//            strMess = gson.toJson(object);
-//        } catch (Exception e) {
-//            LOGGER.error("Error! Convert object to json", e);
-//        }
-//        return strMess;
-//    }
+    /**
+     * Convert Object To String Json
+     *
+     * @param object
+     * @return
+     */
+    public static String convertObjectToStringJson(Object object) {
+        String strMess = "";
+        try {
+            Gson gson = new Gson();
+            strMess = gson.toJson(object);
+        } catch (Exception e) {
+            log.error("Error! Convert object to json", e);
+        }
+        return strMess;
+    }
 
 
 
@@ -1370,7 +1343,7 @@ public class CommonUtils {
         try {
             return "true".equalsIgnoreCase(rb.getString(String.format("%s.marketCompanyId", objectBO)));
         } catch(Exception e) {
-            LOGGER.error("isByMarketCompany:", e);
+            log.error("isByMarketCompany:", e);
             return false;
         }
     }
@@ -1385,7 +1358,7 @@ public class CommonUtils {
         try {
             return "true".equalsIgnoreCase(rb.getString(String.format("%s.searchByDomainData", objectBO)));
         } catch(Exception e) {
-            LOGGER.error("isSearchByDomainData:", e);
+            log.error("isSearchByDomainData:", e);
             return false;
         }
     }
@@ -1400,7 +1373,7 @@ public class CommonUtils {
         try {
             return "true".equalsIgnoreCase(rb.getString(String.format("%s.isMultilLanguage", objectBO)));
         } catch(Exception e) {
-            LOGGER.error("isMultilLanguage:", e);
+            log.error("isMultilLanguage:", e);
             return false;
         }
     }
@@ -1418,7 +1391,7 @@ public class CommonUtils {
         try {
             return convertDateToString(date, Constants.COMMON.DATE_TIME_FORMAT);
         } catch (Exception e) {
-            LOGGER.debug("debug", e);
+            log.debug("debug", e);
             return convertDateToString(date);
         }
     }
@@ -1730,17 +1703,4 @@ public class CommonUtils {
                 ? ret.get(0).getHostAddress()
                 : null;
     }
-
-//    public static String generateToken(String username) {
-//        String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
-//        Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-//                SignatureAlgorithm.HS256.getJcaName());
-//        Instant now = Instant.now();
-//        String jws = Jwts.builder().setIssuer(username).setSubject(username)
-//                .claim("user_name", username)
-//                .setIssuedAt(Date.from(now))
-//                .signWith(hmacKey)
-//                .compact();
-//        return jws;
-//    }
 }

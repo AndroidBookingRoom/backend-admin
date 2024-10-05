@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "Customer")
+@Entity(name = "customer")
 @Setter
 @Getter
 @SuperBuilder
