@@ -8,20 +8,25 @@ import com.example.backend.domain.response.ResponseTypeRoomDTO;
 import com.example.backend.entity.TypeRoom;
 import com.example.backend.repositorys.TypeRoomRepository;
 import com.example.backend.services.TypeRoomService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TypeRoomServiceImpl implements TypeRoomService {
-    private final TypeRoomRepository typeRoomRepository;
+    final TypeRoomRepository typeRoomRepository;
 
-    private final VfData vfData;
+    final VfData vfData;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -36,6 +41,23 @@ public class TypeRoomServiceImpl implements TypeRoomService {
     public DataTableResults<ResponseTypeRoomDTO> getDataTables(RequestTypeRoomDTO request) {
         log.info("[TYPE ROOM SERVICE IMPL] getDataTables with request:{}", CommonUtils.convertObjectToStringJson(request));
         return typeRoomRepository.getDatatable(vfData, request);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deletesTypeRoom(List<Long> ids) {
+        checkTypeRoomDelete();
+        for (Long id : ids) {
+            if (typeRoomRepository.findById(id).isPresent()){
+                typeRoomRepository.deleteById(id);
+            }else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Not Found TypeRoom with id: %s", id));
+            }
+        }
+    }
+
+    private void checkTypeRoomDelete(){
+
     }
 
     private void updateTypeRoom(RequestTypeRoomDTO request) {

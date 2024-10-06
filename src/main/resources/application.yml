@@ -1,5 +1,5 @@
 server:
-#  port: 80
+  port: 80
   servlet:
     context-path: /
 #  address: 192.168.1.11
@@ -49,3 +49,4 @@ minio:
 
 bucket-name:
   hotel: hotel
+  room: imagesroom

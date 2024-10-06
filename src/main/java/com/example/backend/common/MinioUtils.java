@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MinioUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MinioUtils.class);
-
     private final MinioClient minioClient;
     private final MinioConfig minioConfig;
 
@@ -38,8 +36,8 @@ public class MinioUtils {
 
         log.info("MinioUtil | putObject is called");
 
-        log.info("MinioUtil | putObject | filename : " + filename);
-        log.info("MinioUtil | putObject | fileType : " + fileType);
+        log.info("MinioUtil | putObject | filename : {}", filename);
+        log.info("MinioUtil | putObject | fileType : {}", fileType);
 
         InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
 
@@ -62,12 +60,12 @@ public class MinioUtils {
                                 bucket(bucketName).
                                 build());
 
-        log.info("MinioUtil | bucketExists | found : " + found);
+        log.info("MinioUtil | bucketExists | found : {}", found);
 
         if (found) {
-            log.info("MinioUtil | bucketExists | message : " + bucketName + " exists");
+            log.info("MinioUtil | bucketExists | message : {} exists", bucketName);
         } else {
-            log.info("MinioUtil | bucketExists | message : " + bucketName + " does not exist");
+            log.info("MinioUtil | bucketExists | message : {} does not exist", bucketName);
         }
         return found;
     }
@@ -110,14 +108,14 @@ public class MinioUtils {
 
         List<Bucket> bucketList = listBuckets();
 
-        log.info("MinioUtil | listBucketNames | bucketList size : " + bucketList.size());
+        log.info("MinioUtil | listBucketNames | bucketList size : {}", bucketList.size());
 
         List<String> bucketListName = new ArrayList<>();
         for (Bucket bucket : bucketList) {
             bucketListName.add(bucket.name());
         }
 
-        log.info("MinioUtil | listBucketNames | bucketListName size : " + bucketListName.size());
+        log.info("MinioUtil | listBucketNames | bucketListName size : {}", bucketListName.size());
 
         return bucketListName;
     }
@@ -130,7 +128,7 @@ public class MinioUtils {
 
         boolean flag = bucketExists(bucketName);
 
-        log.info("MinioUtil | listObjects | flag : " + flag);
+        log.info("MinioUtil | listObjects | flag : {}", flag);
 
         if (flag) {
             return minioClient.listObjects(
@@ -146,7 +144,7 @@ public class MinioUtils {
         log.info("MinioUtil | removeBucket is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | removeBucket | flag : " + flag);
+        log.info("MinioUtil | removeBucket | flag : {}", flag);
 
         if (flag) {
             Iterable<Result<Item>> myObjects = listObjects(bucketName);
@@ -155,7 +153,7 @@ public class MinioUtils {
                 Item item = result.get();
                 //  Delete failed when There are object files in bucket
 
-                log.info("MinioUtil | removeBucket | item size : " + item.size());
+                log.info("MinioUtil | removeBucket | item size : {}", item.size());
 
                 if (item.size() > 0) {
                     return false;
@@ -166,7 +164,7 @@ public class MinioUtils {
             minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
             flag = bucketExists(bucketName);
 
-            log.info("MinioUtil | removeBucket | flag : " + flag);
+            log.info("MinioUtil | removeBucket | flag : {}", flag);
             if (!flag) {
                 return true;
             }
@@ -183,7 +181,7 @@ public class MinioUtils {
         List<String> listObjectNames = new ArrayList<>();
         boolean flag = bucketExists(bucketName);
 
-        log.info("MinioUtil | listObjectNames | flag : " + flag);
+        log.info("MinioUtil | listObjectNames | flag : {}", flag);
 
         if (flag) {
             Iterable<Result<Item>> myObjects = listObjects(bucketName);
@@ -208,7 +206,7 @@ public class MinioUtils {
 
         boolean flag = bucketExists(bucketName);
 
-        log.info("MinioUtil | removeObject | flag : " + flag);
+        log.info("MinioUtil | removeObject | flag : {}", flag);
 
         if (flag) {
             minioClient.removeObject(
@@ -224,7 +222,7 @@ public class MinioUtils {
 
         log.info("MinioUtil | getObjectUrl is called");
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | getObjectUrl | flag : " + flag);
+        log.info("MinioUtil | getObjectUrl | flag : {}", flag);
 
         String url = "";
 
@@ -234,9 +232,9 @@ public class MinioUtils {
                             .method(Method.GET)
                             .bucket(bucketName)
                             .object(objectName)
-                            .expiry(2, TimeUnit.MINUTES)
+//                            .expiry(2, TimeUnit.MINUTES)
                             .build());
-            log.info("MinioUtil | getObjectUrl | url : " + url);
+            log.info("MinioUtil | getObjectUrl | url : {}", url);
         }
         return url;
     }
@@ -247,13 +245,13 @@ public class MinioUtils {
         log.info("MinioUtil | statObject is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | statObject | flag : " + flag);
+        log.info("MinioUtil | statObject | flag : {}", flag);
         if (flag) {
             StatObjectResponse stat =
                     minioClient.statObject(
                             StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
 
-            log.info("MinioUtil | statObject | stat : " + stat.toString());
+            log.info("MinioUtil | statObject | stat : {}", stat.toString());
 
             return stat;
         }
@@ -266,7 +264,7 @@ public class MinioUtils {
         log.info("MinioUtil | getObject is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | getObject | flag : " + flag);
+        log.info("MinioUtil | getObject | flag : {}", flag);
 
         if (flag) {
             StatObjectResponse statObject = statObject(bucketName, objectName);
@@ -278,7 +276,7 @@ public class MinioUtils {
                                         .object(objectName)
                                         .build());
 
-                log.info("MinioUtil | getObject | stream : " + stream.toString());
+                log.info("MinioUtil | getObject | stream : {}", stream.toString());
                 return stream;
             }
         }
@@ -292,7 +290,7 @@ public class MinioUtils {
         log.info("MinioUtil | getObject is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | getObject | flag : " + flag);
+        log.info("MinioUtil | getObject | flag : {}", flag);
 
         if (flag) {
             StatObjectResponse statObject = statObject(bucketName, objectName);
@@ -306,7 +304,7 @@ public class MinioUtils {
                                         .length(length)
                                         .build());
 
-                log.info("MinioUtil | getObject | stream : " + stream.toString());
+                log.info("MinioUtil | getObject | stream : {}", stream.toString());
                 return stream;
             }
         }
@@ -319,7 +317,7 @@ public class MinioUtils {
         log.info("MinioUtil | removeObject is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | removeObject | flag : " + flag);
+        log.info("MinioUtil | removeObject | flag : {}", flag);
 
         if (flag) {
             List<DeleteObject> objects = new LinkedList<>();
@@ -333,7 +331,7 @@ public class MinioUtils {
             for (Result<DeleteError> result : results) {
                 DeleteError error = result.get();
 
-                log.info("MinioUtil | removeObject | error : " + error.objectName() + " " + error.message());
+                log.info("MinioUtil | removeObject | error : {} {}", error.objectName(), error.message());
 
                 return false;
             }
@@ -348,7 +346,7 @@ public class MinioUtils {
         log.info("MinioUtil | putObject is called");
 
         boolean flag = bucketExists(bucketName);
-        log.info("MinioUtil | putObject | flag : " + flag);
+        log.info("MinioUtil | putObject | flag : {}", flag);
 
         if (flag) {
             minioClient.putObject(

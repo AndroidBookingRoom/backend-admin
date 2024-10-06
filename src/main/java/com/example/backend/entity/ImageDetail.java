@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-@Entity(name = "images")
+@Entity(name = "image_detail")
 @NoArgsConstructor
 public class ImageDetail extends BaseAudits{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,6 @@ public class ImageDetail extends BaseAudits{
     @Column(name = "id_images")
     private Long idImages;
 
-    @Column(name = "link")
+    @Column(name = "link", columnDefinition = "LONGTEXT")
     private String link;
 }

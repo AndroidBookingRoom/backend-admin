@@ -21,6 +21,9 @@ public class Hotel extends BaseAudits {
     @Column(name = "type")
     private Long type;
 
+    @Column(name = "name_hotel")
+    private String nameHotel;
+
     @Column(name = "address")
     private String address;
 

@@ -153,7 +153,7 @@ public class VfDataIml implements VfData {
     @Override
     public <T> DataTableResults<T> findPaginationQuery(String nativeQuery, String orderBy,
                                                        List<Object> paramList, Class obj) {
-        return findPagination(nativeQuery, orderBy, paramList, obj, 5);
+        return findPagination(nativeQuery, orderBy, paramList, obj, 10);
     }
 
 
