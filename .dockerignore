@@ -1,5 +1,3 @@
-.git
-.gitignore
-Dockerfile
-.dockerignore
-target
+* 
+!dist/
+#The first line * disallows all files. The second line !dist/ allows the dist folder
