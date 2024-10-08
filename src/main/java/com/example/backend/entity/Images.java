@@ -6,10 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+
 @Getter
 @Setter
 @SuperBuilder
-@Entity(name = "tbl_images")
+@Entity(name = "images")
 @NoArgsConstructor
 public class Images extends BaseAudits{
     @GeneratedValue(strategy = GenerationType.IDENTITY)

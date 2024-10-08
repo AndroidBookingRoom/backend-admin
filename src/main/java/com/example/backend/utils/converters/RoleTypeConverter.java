@@ -4,6 +4,7 @@ import com.example.backend.utils.enums.RoleType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+
 @Converter(autoApply = true)
 public class RoleTypeConverter implements AttributeConverter<RoleType, String> {
     @Override
