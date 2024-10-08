@@ -1,13 +1,27 @@
+version: '3'
+
 services:
-  minio:
-    image: minio/minio:latest
-    container_name: minio
+  mysql:
+    image: mysql:latest
+    restart: always
     environment:
-      MINIO_ROOT_USER: "ROOTUSER"
-      MINIO_ROOT_PASSWORD: "135246aA@"
-    volumes:
-      - ./data:/data
+      MYSQL_ROOT_PASSWORD: 123
     ports:
-      - 9000:9000
-      - 9001:9001
-    command: server /data --console-address :9001
+      - "3306:3306"
+
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/bookingroom
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://103.148.57.233:3306/bookingroom
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=nhanbn98
+    # Đặt biến môi trường dựa trên môi trường Docker

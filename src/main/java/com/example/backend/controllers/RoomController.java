@@ -28,7 +28,7 @@ public class RoomController {
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public @ResponseBody Response getListRoom(RequestTypeRoomDTO request){
+    public @ResponseBody Response getListRoom(RequestRoomDTO request){
         return Response.success().withData(roomService.getDataTables(request));
     }
 
