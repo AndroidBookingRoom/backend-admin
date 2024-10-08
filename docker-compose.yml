@@ -33,7 +33,7 @@ services:
   spring-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      #dockerfile: Dockerfile
     depends_on:
       - mysql
       - minio
