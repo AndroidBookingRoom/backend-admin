@@ -55,3 +55,6 @@ services:
       - SPRING_BUCKET_NAME_HOTEL=hotel
       - SPRING_BUCKET_NAME_ROOM=imagesroom
     # Đặt biến môi trường dựa trên môi trường Docker
+
+volumes:
+  dbdata:
