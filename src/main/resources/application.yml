@@ -44,15 +44,15 @@ application:
         expiration: 604800000 # 7 days
 
 minio:
-  endpoint: http://127.0.0.1:9000
+  endpoint: ${SPRING_MINIO_HOST:http://127.0.0.1:9000}
   port: 9000
-  accessKey:  YHcMdbiMu54qs5YUgj3h #Login Account
-  secretKey:  eCSedub7dZSucDP1tiAAVX5DWgUsi1PaHWpZrgs6 # Login Password
-  secure: false
-  bucket-name: bookingroom # Bucket Name
-  image-size: 10485760 #  Maximum size of picture file
-  file-size: 1073741824 #  Maximum file size
+  accessKey:  ${SPRING_MINIO_ACCESS_KEY:YHcMdbiMu54qs5YUgj3h} #Login Account
+  secretKey:  ${SPRING_MINIO_SECRET_KEY:eCSedub7dZSucDP1tiAAVX5DWgUsi1PaHWpZrgs6} # Login Password
+  secure: ${SPRING_MINIO_SECURE:false}
+  bucket-name: ${SPRING_MINIO_BUCKET_NAME:bookingroom} # Bucket Name
+  image-size: ${SPRING_MINIO_IMAGE_SIZE:10485760} #  Maximum size of picture file
+  file-size: ${SPRING_MINIO_FILE_SIZE:1073741824} #  Maximum file size
 
 bucket-name:
-  hotel: hotel
-  room: imagesroom
+  hotel: ${SPRING_BUCKET_NAME_HOTEL:hotel}
+  room: ${SPRING_BUCKET_NAME_ROOM:imagesroom}
