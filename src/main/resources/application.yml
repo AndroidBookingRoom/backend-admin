@@ -30,9 +30,9 @@ spring:
 #    username: freedb_nhannguyen
 #    password: XRHayk%&eV4&2#K
 
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/booking_room}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:nhanbn98}
 #    driver-class-name: com.mysql.jdbc.Driver
 
 application:
