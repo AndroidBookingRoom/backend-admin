@@ -2,12 +2,19 @@ version: '3'
 
 services:
   mysql:
-    image: mysql:latest
+    image: mysql
+    container_name: mysql
+    volumes:
+       - dbdata:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      - MYSQL_ROOT_PASSWORD=nhanbn98
+      - MYSQL_ROOT_USER=root
+      - MYSQL_DATABASE=bookingroom
+      - MYSQL_PASSWORD=nhanbn98
     ports:
       - "3306:3306"
+
 
   minio:
     image: quay.io/minio/minio
