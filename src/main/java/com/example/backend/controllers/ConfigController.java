@@ -80,4 +80,9 @@ public class ConfigController {
         typeHotelService.deletesTypeHotel(ids);
         return Response.success();
     }
+
+    @RequestMapping(path = "/type-hotel/getList", method = RequestMethod.GET)
+    public @ResponseBody Response getListTypeHotel(){
+        return Response.success().withData(typeHotelService.getListTypeHotelActive());
+    }
 }
