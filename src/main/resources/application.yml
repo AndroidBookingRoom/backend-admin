@@ -1,5 +1,5 @@
 server:
-#  port: 80
+  port: 80
   servlet:
     context-path: /
 #  address: 192.168.1.11
@@ -21,13 +21,19 @@ spring:
 
   #connection MySQL
   datasource:
-    url: jdbc:mysql://localhost:3306/booking_room?useUnicode=yes&characterEncoding=UTF-8
-    username: root
-    password: nhanbn98
+#    url: jdbc:mysql://localhost:3306/booking_room?useUnicode=yes&characterEncoding=UTF-8
+#    username: root
+#    password: nhanbn98
+#    driverClassName: com.mysql.jdbc.Driver
 
 #    url: jdbc:mysql://sql.freedb.tech:3306/freedb_db_booking
 #    username: freedb_nhannguyen
 #    password: XRHayk%&eV4&2#K
+
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://103.148.57.233:3306/bookingroom}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:nhanbn98}
+#    driver-class-name: com.mysql.jdbc.Driver
 
 application:
   security:
@@ -38,14 +44,15 @@ application:
         expiration: 604800000 # 7 days
 
 minio:
-  endpoint: http://127.0.0.1:9000
+  endpoint: ${SPRING_MINIO_HOST:http://103.148.57.233:9000}
   port: 9000
-  accessKey:  YHcMdbiMu54qs5YUgj3h #Login Account
-  secretKey:  eCSedub7dZSucDP1tiAAVX5DWgUsi1PaHWpZrgs6 # Login Password
-  secure: false
-  bucket-name: bookingroom # Bucket Name
-  image-size: 10485760 #  Maximum size of picture file
-  file-size: 1073741824 #  Maximum file size
+  accessKey:  ${SPRING_MINIO_ACCESS_KEY:admin} #Login Account
+  secretKey:  ${SPRING_MINIO_SECRET_KEY:135246aA@} # Login Password
+  secure: ${SPRING_MINIO_SECURE:false}
+  bucket-name: ${SPRING_MINIO_BUCKET_NAME:bookingroom} # Bucket Name
+  image-size: ${SPRING_MINIO_IMAGE_SIZE:10485760} #  Maximum size of picture file
+  file-size: ${SPRING_MINIO_FILE_SIZE:1073741824} #  Maximum file size
 
 bucket-name:
-  hotel: hotel
+  hotel: ${SPRING_BUCKET_NAME_HOTEL:hotel}
+  room: ${SPRING_BUCKET_NAME_ROOM:imagesroom}

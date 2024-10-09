@@ -21,13 +21,13 @@ public class Hotel extends BaseAudits {
     @Column(name = "type")
     private Long type;
 
+    @Column(name = "name_hotel")
+    private String nameHotel;
+
     @Column(name = "address")
     private String address;
 
     @Column(name = "location")
     private String location;
-
-    @Column(name = "space_area")
-    private Integer space_area;
 
 }

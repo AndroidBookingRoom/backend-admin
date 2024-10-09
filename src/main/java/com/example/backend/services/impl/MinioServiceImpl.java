@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -38,7 +38,7 @@ public class MinioServiceImpl implements MinioService {
     public void makeBucket(String bucketName) {
         log.info("MinioServiceImpl | makeBucket is called");
 
-        log.info("MinioServiceImpl | makeBucket | bucketName : " + bucketName);
+        log.info("MinioServiceImpl | makeBucket | bucketName : {}", bucketName);
 
         minioUtil.makeBucket(bucketName);
     }
@@ -59,7 +59,7 @@ public class MinioServiceImpl implements MinioService {
     public boolean removeBucket(String bucketName) {
         log.info("MinioServiceImpl | removeBucket is called");
 
-        log.info("MinioServiceImpl | removeBucket | bucketName : " + bucketName);
+        log.info("MinioServiceImpl | removeBucket | bucketName : {}", bucketName);
 
         return minioUtil.removeBucket(bucketName);
     }
@@ -68,7 +68,7 @@ public class MinioServiceImpl implements MinioService {
     public List<String> listObjectNames(String bucketName) {
         log.info("MinioServiceImpl | listObjectNames is called");
 
-        log.info("MinioServiceImpl | listObjectNames | bucketName : " + bucketName);
+        log.info("MinioServiceImpl | listObjectNames | bucketName : {}", bucketName);
 
         return minioUtil.listObjectNames(bucketName);
     }
@@ -82,29 +82,29 @@ public class MinioServiceImpl implements MinioService {
         try {
             bucketName = !CommonUtils.isNullOrEmpty(bucketName) ? bucketName : minioProperties.getBucketName();
 
-            log.info("MinioServiceImpl | putObject | bucketName : " + bucketName);
+            log.info("MinioServiceImpl | putObject | bucketName : {}", bucketName);
 
             if (!this.bucketExists(bucketName)) {
                 this.makeBucket(bucketName);
-                log.info("MinioServiceImpl | putObject | bucketName : " + bucketName + " created");
+                log.info("MinioServiceImpl | putObject | bucketName : {} created", bucketName);
             }
 
             String fileName = multipartFile.getOriginalFilename();
-            log.info("MinioServiceImpl | getFileType | fileName : " + fileName);
+            log.info("MinioServiceImpl | getFileType | fileName : {}", fileName);
 
             Long fileSize = multipartFile.getSize();
-            log.info("MinioServiceImpl | getFileType | fileSize : " + fileSize);
+            log.info("MinioServiceImpl | getFileType | fileSize : {}", fileSize);
 
             String objectName = UUID.randomUUID().toString().replaceAll("-", "")
-                    + fileName.substring(fileName.lastIndexOf("."));
-            log.info("MinioServiceImpl | getFileType | objectName : " + objectName);
+                    + Objects.requireNonNull(fileName).substring(fileName.lastIndexOf("."));
+            log.info("MinioServiceImpl | getFileType | objectName : {}", objectName);
 
             LocalDateTime createdTime = LocalDateTime.now();
-            log.info("MinioServiceImpl | getFileType | createdTime : " + createdTime);
+            log.info("MinioServiceImpl | getFileType | createdTime : {}", createdTime);
 
             minioUtil.putObject(bucketName, multipartFile, objectName,fileType);
 
-            log.info("MinioServiceImpl | getFileType | url : " + minioProperties.getEndpoint()+"/"+bucketName+"/"+objectName);
+            log.info("MinioServiceImpl | getFileType | url : {}/{}/{}", minioProperties.getEndpoint(), bucketName, objectName);
 
             return FileResponse.builder()
                     .filename(objectName)
@@ -114,7 +114,7 @@ public class MinioServiceImpl implements MinioService {
                     .build();
 
         } catch (Exception e) {
-            log.info("MinioServiceImpl | getFileType | Exception : " + e.getMessage());
+            log.info("MinioServiceImpl | getFileType | Exception : {}", e.getMessage());
             return null;
         }
     }
@@ -123,8 +123,8 @@ public class MinioServiceImpl implements MinioService {
     public InputStream downloadObject(String bucketName, String objectName) {
         log.info("MinioServiceImpl | downloadObject is called");
 
-        log.info("MinioServiceImpl | downloadObject | bucketName : " + bucketName);
-        log.info("MinioServiceImpl | downloadObject | objectName : " + objectName);
+        log.info("MinioServiceImpl | downloadObject | bucketName : {}", bucketName);
+        log.info("MinioServiceImpl | downloadObject | objectName : {}", objectName);
 
         return minioUtil.getObject(bucketName,objectName);
     }
@@ -133,8 +133,8 @@ public class MinioServiceImpl implements MinioService {
     public boolean removeObject(String bucketName, String objectName) {
         log.info("MinioServiceImpl | removeObject is called");
 
-        log.info("MinioServiceImpl | removeObject | bucketName : " + bucketName);
-        log.info("MinioServiceImpl | removeObject | objectName : " + objectName);
+        log.info("MinioServiceImpl | removeObject | bucketName : {}", bucketName);
+        log.info("MinioServiceImpl | removeObject | objectName : {}", objectName);
 
         return minioUtil.removeObject(bucketName, objectName);
     }
@@ -143,8 +143,8 @@ public class MinioServiceImpl implements MinioService {
     public boolean removeListObject(String bucketName, List<String> objectNameList) {
         log.info("MinioServiceImpl | removeListObject is called");
 
-        log.info("MinioServiceImpl | removeObject | bucketName : " + bucketName);
-        log.info("MinioServiceImpl | removeObject | objectNameList size : " + objectNameList.size());
+        log.info("MinioServiceImpl | removeListObject | bucketName : {}", bucketName);
+        log.info("MinioServiceImpl | removeListObject | objectNameList size : {}", objectNameList.size());
 
         return minioUtil.removeObject(bucketName,objectNameList);
     }
@@ -153,8 +153,8 @@ public class MinioServiceImpl implements MinioService {
     public String getObjectUrl(String bucketName, String objectName) {
         log.info("MinioServiceImpl | getObjectUrl is called");
 
-        log.info("MinioServiceImpl | getObjectUrl | bucketName : " + bucketName);
-        log.info("MinioServiceImpl | getObjectUrl | objectName : " + objectName);
+        log.info("MinioServiceImpl | getObjectUrl | bucketName : {}", bucketName);
+        log.info("MinioServiceImpl | getObjectUrl | objectName : {}", objectName);
 
         return minioUtil.getObjectUrl(bucketName, objectName);
     }
