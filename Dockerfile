@@ -8,10 +8,10 @@ LABEL authors="nhanns"
 WORKDIR /app
 
 # Copy file JAR được build từ ứng dụng Spring Boot vào working directory trong container
-COPY target/backend-0.0.1-SNAPSHOT.jar application.jar
+COPY target/backend-0.0.1-SNAPSHOT.jar backend-admin.jar
 
 # Expose port của ứng dụng
-EXPOSE 8080
+EXPOSE 8001
 
 # Chỉ định command để chạy ứng dụng khi container khởi chạy
-CMD ["java", "-jar", "application.jar"]
+CMD ["java", "-jar", "backend-admin.jar"]

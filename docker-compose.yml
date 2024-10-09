@@ -31,15 +31,13 @@ services:
 
 
   spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: backend-admin
     depends_on:
       - mysql
       - minio
     restart: always
     ports:
-      - "8080:8080"
+      - "8080:8001"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/bookingroom
       #      - SPRING_DATASOURCE_URL=jdbc:mysql://103.148.57.233:3306/bookingroom
