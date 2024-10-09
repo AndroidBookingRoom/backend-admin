@@ -30,7 +30,4 @@ public class Hotel extends BaseAudits {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "space_area")
-    private Integer space_area;
-
 }

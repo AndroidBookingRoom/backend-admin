@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,6 +49,23 @@ public class TypeHotelServiceImpl implements TypeHotelService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Not Found TypeBed with id: %s", id));
             }
         }
+    }
+
+    @Override
+    public List<ResponseTypeHotelDTO> getListTypeHotelActive() {
+        List<TypeHotel> typeHotels = typeHotelRepository.getTypeHotelByUseYn(Boolean.TRUE);
+        if (CommonUtils.isNullOrEmpty(typeHotels)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found TypeHotel active");
+        }
+        List<ResponseTypeHotelDTO> response = new ArrayList<>();
+        for (TypeHotel typeHotel : typeHotels) {
+            response.add(ResponseTypeHotelDTO.builder()
+                            .id(typeHotel.getId())
+                            .name(typeHotel.getName())
+                    .build());
+        }
+
+        return response;
     }
 
     private void checkTypeHotelDelete() {}

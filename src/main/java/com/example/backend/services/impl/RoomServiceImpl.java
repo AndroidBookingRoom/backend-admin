@@ -11,9 +11,11 @@ import com.example.backend.entity.ImageDetail;
 import com.example.backend.entity.Images;
 import com.example.backend.entity.Rooms;
 import com.example.backend.repositorys.RoomRepository;
+import com.example.backend.services.CommonService;
 import com.example.backend.services.ImagesService;
 import com.example.backend.services.MinioService;
 import com.example.backend.services.RoomService;
+import com.example.backend.utils.enums.ActionTypeImage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,11 +37,8 @@ public class RoomServiceImpl implements RoomService {
     final RoomRepository roomRepository;
     final ImagesService imagesService;
 
-    final MinioService minioService;
     final VfData vfData;
-
-    @Value("${bucket-name.room}")
-    String bucketName;
+    final CommonService commonService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,38 +74,11 @@ public class RoomServiceImpl implements RoomService {
                 .build();
         roomRepository.save(room);
         if (!CommonUtils.isEmpty(request.getFileImages())) {
-            handleImages(request.getFileImages(), room.getId());
+            commonService.uploadImage(ActionTypeImage.ROOM, room.getId(), request.getFileImages());
         }
     }
 
-    private void updateRoom(RequestRoomDTO request) {}
-    private void handleImages(MultipartFile[] fileImages, Long idRoom) {
-        uploadImage(fileImages, idRoom);
+    private void updateRoom(RequestRoomDTO request) {
     }
 
-    private void uploadImage(MultipartFile[] multipartFiles, Long idRoom) {
-        try {
-            for (MultipartFile file : multipartFiles) {
-                String fileType = FileTypeUtils.getFileType(file);
-                if (!CommonUtils.isEmpty(fileType)){
-                   FileResponse fileResponse = minioService.putObject(file, bucketName, fileType);
-                   handleSaveImage(fileResponse, idRoom);
-                }
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "File cannot be Upload");
-        }
-    }
-
-    private void handleSaveImage(FileResponse fileResponse, Long idRoom){
-        Images images = Images.builder()
-                .idRoom(idRoom)
-                .build();
-        imagesService.saveImage(images);
-        ImageDetail imageDetail = ImageDetail.builder()
-                .idImages(images.getId())
-                .link(minioService.getObjectUrl(bucketName, fileResponse.getFilename()))
-                .build();
-        imagesService.saveImageDetails(imageDetail);
-    }
 }

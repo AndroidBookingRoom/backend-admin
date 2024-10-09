@@ -14,4 +14,6 @@ public interface TypeHotelService {
     DataTableResults<ResponseTypeHotelDTO> getDataTables(RequestTypeHotelDTO request);
 
     void deletesTypeHotel(List<Long> ids);
+
+    List<ResponseTypeHotelDTO> getListTypeHotelActive();
 }

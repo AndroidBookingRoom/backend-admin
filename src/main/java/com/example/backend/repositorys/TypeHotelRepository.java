@@ -16,6 +16,8 @@ import java.util.List;
 public interface TypeHotelRepository extends JpaRepository<TypeHotel, Long> {
     boolean existsByName(String name);
 
+    List<TypeHotel> getTypeHotelByUseYn(Boolean useYn);
+
     boolean existsByNameAndIdNotIn(String name, List<Long> id);
 
     default DataTableResults<ResponseTypeHotelDTO> getDatatable(VfData vfData, RequestTypeHotelDTO request) {
