@@ -159,6 +159,7 @@ public class VfDataIml implements VfData {
 
     private <T> DataTableResults<T> findPagination(String nativeQuery, String orderBy,
                                                    List<Object> paramList, Class obj, int limit) {
+        log.info("[VF DATA IMPL] findPagination");
         String _search = req.getParameter("_search");
         SearchParams searchParams = new SearchParams();
         if (!CommonUtils.isNullOrEmpty(_search)) {

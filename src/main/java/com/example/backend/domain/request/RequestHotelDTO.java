@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,4 +19,5 @@ public class RequestHotelDTO {
     Long type; //Type hotel
     String service;
     MultipartFile[] fileImages;
+    List<Long> listImageDelete;
 }
