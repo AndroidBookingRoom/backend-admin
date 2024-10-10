@@ -74,7 +74,7 @@ public class RoomServiceImpl implements RoomService {
                 .build();
         roomRepository.save(room);
         if (!CommonUtils.isEmpty(request.getFileImages())) {
-            commonService.uploadImage(ActionTypeImage.ROOM, room.getId(), request.getFileImages());
+//            commonService.uploadImage(ActionTypeImage.ROOM, room.getId(), request.getFileImages());
         }
     }
 
