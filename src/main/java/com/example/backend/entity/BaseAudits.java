@@ -21,7 +21,7 @@ public class BaseAudits {
     @CreationTimestamp
     private LocalDateTime createDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", insertable = false)
     @UpdateTimestamp
     private LocalDateTime updateDate;
 }

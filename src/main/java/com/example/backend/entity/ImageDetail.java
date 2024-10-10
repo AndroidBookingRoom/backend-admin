@@ -23,4 +23,7 @@ public class ImageDetail extends BaseAudits{
 
     @Column(name = "link", columnDefinition = "LONGTEXT")
     private String link;
+
+    @Column(name = "file_name")
+    private String fileName; // use save for delete in minio
 }

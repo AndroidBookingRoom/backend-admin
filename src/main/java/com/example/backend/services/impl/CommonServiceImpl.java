@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -34,28 +36,37 @@ public class CommonServiceImpl implements CommonService {
     private String bucketNameHotel;
 
     @Override
-    public void uploadImage(ActionTypeImage actionTypeImage, Long id,
-                            MultipartFile[] multipartFiles) {
-        String bucketName = "";
-        switch (actionTypeImage){
-            case HOTEL -> {
-                bucketName = bucketNameHotel;
-                break;
-            }
-            case ROOM -> {
-                bucketName = bucketNameRoom;
-                break;
-            }
-            default -> {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chỉ xử lý ảnh với Khách sạn và Phòng");
+    public void handleDeleteImageByListIdImageDetail(List<Long> ids, ActionTypeImage actionTypeImage, Long idFk) {
+        if (CommonUtils.isEmpty(idFk)){
+            log.error("[handleDeleteImageByListIdImageDetail] Not start method, because idFk is empty");
+            return;
+        }
+        Images images = imagesService.findImageByIdFK(idFk, actionTypeImage).orElse(null);
+        if (CommonUtils.isEmpty(images)) {
+            log.error("[handleDeleteImageByListIdImageDetail] Not found Image with action:{}, id:{}", actionTypeImage, idFk);
+            return;
+        }
+        String bucketName = getBucketName(actionTypeImage);
+        for (Long id : ids) {
+            ImageDetail imageDetail = imagesService.findImageDetailById(id).orElse(null);
+            if (!CommonUtils.isEmpty(imageDetail)) {
+                imagesService.deleteImageDetailById(imageDetail.getId());
+                minioService.removeObject(bucketName, imageDetail.getFileName());
             }
         }
+    }
+
+    @Override
+    public void uploadImage(ActionTypeImage actionTypeImage, Long id,
+                            MultipartFile[] multipartFiles) {
+        Images images = imagesService.findImageByIdFK(id, actionTypeImage).orElse(new Images());
+        String bucketName = getBucketName(actionTypeImage);
         try {
             for (MultipartFile file : multipartFiles) {
                 String fileType = FileTypeUtils.getFileType(file);
-                if (!CommonUtils.isEmpty(fileType)){
+                if (!CommonUtils.isEmpty(fileType)) {
                     FileResponse fileResponse = minioService.putObject(file, bucketName, fileType);
-                    handleSaveImage(fileResponse, actionTypeImage, id, bucketName);
+                    handleSaveImage(fileResponse, actionTypeImage, id, bucketName, images);
                 }
             }
         } catch (Exception e) {
@@ -64,26 +75,42 @@ public class CommonServiceImpl implements CommonService {
         }
     }
 
-    public void handleSaveImage(FileResponse fileResponse, ActionTypeImage actionTypeImage, Long id, String bucketName) {
-        Images images = new Images();
-        switch (actionTypeImage){
+    public void handleSaveImage(FileResponse fileResponse, ActionTypeImage actionTypeImage, Long id, String bucketName, Images images) {
+        if (CommonUtils.isEmpty(images.getId())) {
+            switch (actionTypeImage) {
+                case HOTEL -> {
+                    images.setIdHotel(id);
+                    break;
+                }
+                case ROOM -> {
+                    images.setIdRoom(id);
+                    break;
+                }
+                default -> {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chỉ xử lý ảnh với Khách sạn và Phòng");
+                }
+            }
+            imagesService.saveImage(images);
+        }
+        ImageDetail imageDetail = ImageDetail.builder()
+                .idImages(images.getId())
+                .link(minioService.getObjectUrl(bucketName, fileResponse.getFilename()))
+                .fileName(fileResponse.getFilename())
+                .build();
+        imagesService.saveImageDetails(imageDetail);
+    }
+
+    private String getBucketName(ActionTypeImage actionTypeImage) {
+        switch (actionTypeImage) {
             case HOTEL -> {
-                images.setIdHotel(id);
-                break;
+                return bucketNameHotel;
             }
             case ROOM -> {
-                images.setIdRoom(id);
-                break;
+                return bucketNameRoom;
             }
             default -> {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chỉ xử lý ảnh với Khách sạn và Phòng");
             }
         }
-        imagesService.saveImage(images);
-        ImageDetail imageDetail = ImageDetail.builder()
-                .idImages(images.getId())
-                .link(minioService.getObjectUrl(bucketName, fileResponse.getFilename()))
-                .build();
-        imagesService.saveImageDetails(imageDetail);
     }
 }
