@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/hotel")
@@ -33,5 +35,11 @@ public class HotelController {
     @RequestMapping(path = "/find-by-id", method = RequestMethod.GET)
     public @ResponseBody Response findHotelById(@RequestParam Long id) {
         return Response.success().withData(hotelService.findHotelById(id));
+    }
+
+    @RequestMapping(path = "/deletes", method = RequestMethod.DELETE)
+    public @ResponseBody Response deleteHotel(@RequestParam List<Long> ids){
+        hotelService.deleteHotelByListId(ids);
+        return Response.success();
     }
 }
