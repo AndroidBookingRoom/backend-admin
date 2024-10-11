@@ -101,6 +101,21 @@ public class HotelServiceImpl implements HotelService {
         return response;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteHotelByListId(List<Long> ids) {
+        checkHotelDelete();
+        for (Long id : ids) {
+            if (hotelRepository.findById(id).isPresent()){
+                hotelRepository.deleteById(id);
+            }else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Not Found Hotel with id: %s", id));
+            }
+        }
+    }
+
+    private void checkHotelDelete() {}
+
     private Hotel handleCreateHotel(RequestHotelDTO request) {
         Hotel hotel = Hotel.builder()
                 .nameHotel(request.getNameHotel())
