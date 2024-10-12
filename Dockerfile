@@ -11,7 +11,7 @@ WORKDIR /app
 COPY target/backend-0.0.1-SNAPSHOT.jar backend-admin.jar
 
 # Expose port của ứng dụng
-EXPOSE 80
+EXPOSE 9001
 
 # Chỉ định command để chạy ứng dụng khi container khởi chạy
 CMD ["java", "-jar", "backend-admin.jar"]
