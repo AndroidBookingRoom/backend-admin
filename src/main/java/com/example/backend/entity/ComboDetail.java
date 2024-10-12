@@ -1,10 +1,13 @@
 package com.example.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -23,5 +26,24 @@ public class ComboDetail extends BaseAudits{
 
     @Column(name = "description")
     private String description;
+
+    @Column(name ="airlines")
+    private String airlines;
+
+    @Column(name = "round_trip_shuttle")
+    @Builder.Default
+    private Boolean roundTripShuttle = Boolean.FALSE;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "terms_and_conditions")
+    private String termsAndConditions;
+
+    @Column(name = "time")
+    private String time;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
 }

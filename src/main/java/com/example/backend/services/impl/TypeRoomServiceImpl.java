@@ -4,7 +4,9 @@ import com.example.backend.common.CommonUtils;
 import com.example.backend.common.DataTableResults;
 import com.example.backend.common.VfData;
 import com.example.backend.domain.request.RequestTypeRoomDTO;
+import com.example.backend.domain.response.ResponseTypeHotelDTO;
 import com.example.backend.domain.response.ResponseTypeRoomDTO;
+import com.example.backend.entity.TypeHotel;
 import com.example.backend.entity.TypeRoom;
 import com.example.backend.repositorys.TypeRoomRepository;
 import com.example.backend.services.TypeRoomService;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +44,27 @@ public class TypeRoomServiceImpl implements TypeRoomService {
     public DataTableResults<ResponseTypeRoomDTO> getDataTables(RequestTypeRoomDTO request) {
         log.info("[TYPE ROOM SERVICE IMPL] getDataTables with request:{}", CommonUtils.convertObjectToStringJson(request));
         return typeRoomRepository.getDatatable(vfData, request);
+    }
+
+    @Override
+    public List<ResponseTypeRoomDTO> getListTypeRoomActive() {
+        List<TypeRoom> listTypeRoom = typeRoomRepository.getTypeRoomByUseYn(Boolean.TRUE);
+        if (CommonUtils.isNullOrEmpty(listTypeRoom)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found TypeRoom active");
+        }
+        List<ResponseTypeRoomDTO> response = new ArrayList<>();
+        for (TypeRoom typeRoom : listTypeRoom) {
+            response.add(ResponseTypeRoomDTO.builder()
+                    .id(typeRoom.getId())
+                    .name(typeRoom.getName())
+                    .build());
+        }
+        return response;
+    }
+
+    @Override
+    public List<ResponseTypeRoomDTO> getListTypeHotelActiveByHotelId(Long hotelId) {
+        return typeRoomRepository.getListTypeRoomActiveByHotelId(vfData, hotelId).getData();
     }
 
     @Override

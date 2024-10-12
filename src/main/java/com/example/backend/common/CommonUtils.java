@@ -23,7 +23,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.example.backend.common.Constants.IMAGE_EXTENSIONS;
 
 @Slf4j
 public class CommonUtils {
@@ -122,6 +126,33 @@ public class CommonUtils {
         } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             return dateFormat.format(date);
+        }
+    }
+
+    public static String getFileNameFromLocalDateTime(){
+        // Lấy thời gian hiện tại
+        LocalDateTime now = LocalDateTime.now();
+
+        // Định dạng LocalDateTime thành một chuỗi
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String formattedDateTime = now.format(formatter);
+
+        // Tạo tên file
+        return "file_" + formattedDateTime + ".txt";
+    }
+
+    /**
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getFileNameWithoutExtension(String fileName){
+        if (!isEmpty(fileName) && fileName.contains(".")) {
+            // Lấy vị trí của dấu chấm cuối cùng
+            int lastDotIndex = fileName.lastIndexOf(".");
+            return fileName.substring(0, lastDotIndex); // Lấy phần tên trước dấu chấm
+        }else {
+            return "";
         }
     }
 
@@ -976,7 +1007,7 @@ public class CommonUtils {
      */
     public static String buildPaginatedQuery(String baseQuery, String orderBy, SearchParams searchParams) {
         if (!isEmpty(searchParams)) {
-            if (!"".equals(CommonUtils.NVL(searchParams.getOrderByClause()))) {
+            if (!CommonUtils.NVL(searchParams.getOrderByClause()).isEmpty()) {
                 orderBy = searchParams.getOrderByClause();
             }
         }
@@ -1703,4 +1734,67 @@ public class CommonUtils {
                 ? ret.get(0).getHostAddress()
                 : null;
     }
+    public static String getImageFileType(MultipartFile file) throws IOException {
+        // Kiểm tra nếu file tồn tại và không rỗng
+        if (file.isEmpty()) {
+            return "";
+        }
+
+        // Lấy phần mở rộng
+        String extension = getFileExtension(file.getOriginalFilename());
+        if (isEmpty(extension)) {
+            return "";
+        }
+        // Kiểm tra loại file dựa vào phần mở rộng
+        if (isImageExtension(extension)) {
+            // Đọc phần đầu của file để kiểm tra loại file
+            byte[] fileBytes = new byte[8];
+            try (InputStream inputStream = file.getInputStream()) {
+                inputStream.read(fileBytes);
+            }
+            return determineImageType(fileBytes, extension);
+        }
+
+        return "";
+    }
+
+    private static String getFileExtension(String fileName) {
+        if (!isEmpty(fileName)){
+            int lastDotIndex = fileName.lastIndexOf('.');
+            return (lastDotIndex == -1) ? "" : fileName.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
+    private static boolean isImageExtension(String extension) {
+        for (String imgExt : IMAGE_EXTENSIONS) {
+            if (imgExt.equals(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static String determineImageType(byte[] fileBytes, String extension) {
+        // Kiểm tra từng loại hình ảnh dựa trên tiêu đề
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return (fileBytes[0] == (byte) 0xFF && fileBytes[1] == (byte) 0xD8) ? "image/jpeg" : "";
+            case "png":
+                return (fileBytes[0] == (byte) 0x89 && fileBytes[1] == (byte) 0x50 && fileBytes[2] == (byte) 0x4E && fileBytes[3] == (byte) 0x47) ? "image/png" : "";
+            case "gif":
+                return (fileBytes[0] == 'G' && fileBytes[1] == 'I' && fileBytes[2] == 'F') ? "image/gif" : "";
+            case "bmp":
+                return (fileBytes[0] == 'B' && fileBytes[1] == 'M') ? "image/bmp" : "";
+            case "webp":
+                return (fileBytes[0] == 'R' && fileBytes[1] == 'I' && fileBytes[2] == 'F' && fileBytes[3] == 'F' ||
+                        fileBytes[4] == 'W' && fileBytes[5] == 'E' && fileBytes[6] == 'B' && fileBytes[7] == 'P') ? "image/webp" : "";
+            case "tiff":
+            case "tif":
+                return (fileBytes[0] == 'I' && fileBytes[1] == 'I' && fileBytes[2] == 0x2A) || (fileBytes[0] == 'M' && fileBytes[1] == 'M' && fileBytes[2] == 0x00 && fileBytes[3] == 0x2A) ? "image/tiff" : "";
+            default:
+                return "";
+        }
+    }
+
 }

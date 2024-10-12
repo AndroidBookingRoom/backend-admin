@@ -46,6 +46,16 @@ public class ConfigController {
         return Response.success();
     }
 
+    @RequestMapping(path = "/type-room/getList", method = RequestMethod.GET)
+    public @ResponseBody Response getListTypeRoom(){
+        return Response.success().withData(typeRoomService.getListTypeRoomActive());
+    }
+
+    @RequestMapping(path = "/type-room/find-by-hotel", method = RequestMethod.GET)
+    public @ResponseBody Response findTypeRoomByHotel(@RequestParam Long id){
+        return Response.success().withData(typeRoomService.getListTypeHotelActiveByHotelId(id));
+    }
+
 
     @RequestMapping(path = "/type-bed/saveOrUpdate", method = RequestMethod.POST)
     public @ResponseBody Response typeBedSaveOrUpdate(@Valid RequestTypeBedDTO request) {
@@ -62,6 +72,11 @@ public class ConfigController {
     public @ResponseBody Response deleteTypeBed(@RequestParam List<Long> ids){
         typeBedService.deletesTypeRoom(ids);
         return Response.success();
+    }
+
+    @RequestMapping(path = "/type-bed/getList", method = RequestMethod.GET)
+    public @ResponseBody Response getListTypeBed(){
+        return Response.success().withData(typeBedService.getListTypeBedActive());
     }
 
     @RequestMapping(path = "/type-hotel/saveOrUpdate", method = RequestMethod.POST)
@@ -84,5 +99,10 @@ public class ConfigController {
     @RequestMapping(path = "/type-hotel/getList", method = RequestMethod.GET)
     public @ResponseBody Response getListTypeHotel(){
         return Response.success().withData(typeHotelService.getListTypeHotelActive());
+    }
+
+    @RequestMapping(path = "/type-hotel/find-by-hotel", method = RequestMethod.GET)
+    public @ResponseBody Response getListTypeHotel(@RequestParam Long id){
+        return Response.success().withData(typeHotelService.getListTypeHotelActiveByHotelId(id));
     }
 }

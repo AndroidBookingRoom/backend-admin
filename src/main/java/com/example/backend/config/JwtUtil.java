@@ -49,7 +49,7 @@ public class JwtUtil implements Serializable {
             return claimsResolver.apply(claims);
         } catch (Exception e) {
 //            throw new JwtException("ExpiredJwtException");
-            logger.error(e.getMessage() + ": ExpiredJwtException");
+            logger.error("{}: ExpiredJwtException", e.getMessage());
             return null;
         }
     }

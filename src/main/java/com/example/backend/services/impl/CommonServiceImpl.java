@@ -63,7 +63,7 @@ public class CommonServiceImpl implements CommonService {
         String bucketName = getBucketName(actionTypeImage);
         try {
             for (MultipartFile file : multipartFiles) {
-                String fileType = FileTypeUtils.getFileType(file);
+                String fileType = CommonUtils.getImageFileType(file);
                 if (!CommonUtils.isEmpty(fileType)) {
                     FileResponse fileResponse = minioService.putObject(file, bucketName, fileType);
                     handleSaveImage(fileResponse, actionTypeImage, id, bucketName, images);

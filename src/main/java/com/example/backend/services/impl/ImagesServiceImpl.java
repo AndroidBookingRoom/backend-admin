@@ -67,4 +67,14 @@ public class ImagesServiceImpl implements ImagesService {
     public Optional<ImageDetail> findImageDetailById(Long imageId) {
         return imageDetailRepository.findById(imageId);
     }
+
+    @Override
+    public Optional<Images> findImagesByIdRoom(Long idRoom) {
+        return imagesRepository.findImagesByIdRoom(idRoom);
+    }
+
+    @Override
+    public Optional<Images> findImagesByIdHotel(Long idHotel) {
+        return imagesRepository.findImagesByIdHotel(idHotel);
+    }
 }

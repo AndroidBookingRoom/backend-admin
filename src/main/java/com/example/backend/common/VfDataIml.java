@@ -156,6 +156,10 @@ public class VfDataIml implements VfData {
         return findPagination(nativeQuery, orderBy, paramList, obj, 10);
     }
 
+    @Override
+    public <T> List<T> findAllData(String nativeQuery, String orderBy, List<Object> paramList, Class obj) {
+        return findALl(nativeQuery, orderBy, paramList, obj);
+    }
 
     private <T> DataTableResults<T> findPagination(String nativeQuery, String orderBy,
                                                    List<Object> paramList, Class obj, int limit) {
@@ -196,6 +200,28 @@ public class VfDataIml implements VfData {
         }
 
         return dataTableResult;
+    }
+
+    private <T> List<T> findALl(String nativeQuery, String orderBy,
+                                                   List<Object> paramList, Class obj) {
+        log.info("[VF DATA IMPL] findALl");
+        String paginatedQuery = CommonUtils.buildPaginatedQuery(nativeQuery, orderBy, null);
+        String countStrQuery = CommonUtils.buildCountQuery(nativeQuery);
+        NativeQuery query = createNativeQuery(paginatedQuery);
+        setResultTransformer(query, obj);
+        // pagination
+        NativeQuery countQuery = createNativeQuery(countStrQuery);
+        if (!CommonUtils.isNullOrEmpty(paramList)) {
+            int paramSize = paramList.size();
+            for (int i = 0; i < paramSize; i++) {
+                countQuery.setParameter(i + 1, paramList.get(i));
+                query.setParameter(i + 1, paramList.get(i));
+            }
+        }
+        @SuppressWarnings("unchecked")
+        List<T> userList = query.list();
+
+        return userList;
     }
 
 }

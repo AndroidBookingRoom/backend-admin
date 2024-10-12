@@ -20,7 +20,7 @@ public class Constants {
      */
     private static HttpServletRequest req;
     public static String SCHEMA_PAYROLL = "vhr";
-
+    public static String[] IMAGE_EXTENSIONS = { "jpg", "jpeg", "png", "gif", "bmp", "webp", "tiff", "tif" };
     public static class RESPONSE_TYPE {
         public static final String SUCCESS = "SUCCESS";
         public static final String NOT_FOUND = "NOT_FOUND";

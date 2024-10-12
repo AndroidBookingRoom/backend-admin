@@ -14,4 +14,7 @@ public interface TypeBedService {
     DataTableResults<ResponseTypeBedDTO> getDataTables(RequestTypeBedDTO request);
 
     void deletesTypeRoom(List<Long> ids);
+
+    List<ResponseTypeBedDTO> getListTypeBedActive();
+
 }

@@ -6,6 +6,7 @@ import com.example.backend.common.VfData;
 import com.example.backend.domain.request.RequestTypeBedDTO;
 import com.example.backend.domain.request.RequestTypeRoomDTO;
 import com.example.backend.domain.response.ResponseTypeBedDTO;
+import com.example.backend.domain.response.ResponseTypeRoomDTO;
 import com.example.backend.entity.TypeBed;
 import com.example.backend.entity.TypeRoom;
 import com.example.backend.repositorys.TypeBedRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,6 +47,22 @@ public class TypeBedServiceImpl implements TypeBedService {
     }
 
     @Override
+    public List<ResponseTypeBedDTO> getListTypeBedActive() {
+        List<TypeBed> listTypeBed = typeBedRepository.findTypeBedByUseYn(Boolean.TRUE);
+        if (CommonUtils.isNullOrEmpty(listTypeBed)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found TypeBed active");
+        }
+        List<ResponseTypeBedDTO> response = new ArrayList<>();
+        for (TypeBed typeBed : listTypeBed) {
+            response.add(ResponseTypeBedDTO.builder()
+                    .id(typeBed.getId())
+                    .name(typeBed.getName())
+                    .build());
+        }
+        return response;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deletesTypeRoom(List<Long> ids) {
         checkTypeBedDelete();
@@ -56,6 +74,7 @@ public class TypeBedServiceImpl implements TypeBedService {
             }
         }
     }
+
 
     private void checkTypeBedDelete() {}
 

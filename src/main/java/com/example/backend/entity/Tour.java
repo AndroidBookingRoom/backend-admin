@@ -24,24 +24,6 @@ public class Tour extends BaseAudits {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "departure_date")
-    private LocalDateTime departureDate;
-
-    @Column(name = "procedures_visa")
-    private String proceduresVisa; // Thủ tục, visa
-
-    @Column(name = "price")
-    private BigDecimal price;
-
-    @Column(name = "departure_address")
-    private String departureAddress;
-
-    @Column(name = "location_tour")
-    private String locationTour;
-
-    @Column(name = "airlines")
-    private String airlines;
-
     @Column(name = "event_type")
     private Long eventType;
 }

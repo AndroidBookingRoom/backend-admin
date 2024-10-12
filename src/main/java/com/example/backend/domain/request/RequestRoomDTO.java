@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
@@ -22,4 +24,5 @@ public class RequestRoomDTO {
     Integer numberOfBedRooms;
     Integer numberOfBeds;
     MultipartFile[] fileImages;
+    List<Long> listImageDelete;
 }

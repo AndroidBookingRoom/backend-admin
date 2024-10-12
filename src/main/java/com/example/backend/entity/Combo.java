@@ -23,25 +23,6 @@ public class Combo extends BaseAudits{
     @Column(name = "name")
     private String name;
 
-    @Column(name ="airlines")
-    private String airlines;
-
-    @Column(name = "round_trip_shuttle")
-    @Builder.Default
-    private Boolean roundTripShuttle = Boolean.FALSE;
-
-    @Column(name = "location")
-    private String location;
-
-    @Column(name = "terms_and_conditions")
-    private String termsAndConditions;
-
-    @Column(name = "time")
-    private String time;
-
-    @Column(name = "price")
-    private BigDecimal price;
-
     @Column(name = "event_type")
     private Long eventType;
 }

@@ -68,6 +68,11 @@ public class TypeHotelServiceImpl implements TypeHotelService {
         return response;
     }
 
+    @Override
+    public List<ResponseTypeHotelDTO> getListTypeHotelActiveByHotelId(Long hotelId) {
+        return typeHotelRepository.getListTypeHotelActiveByHotelId(vfData, hotelId).getData();
+    }
+
     private void checkTypeHotelDelete() {}
 
     private void saveTypeHotel(RequestTypeHotelDTO request) {

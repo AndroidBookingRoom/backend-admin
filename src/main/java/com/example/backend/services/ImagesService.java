@@ -15,4 +15,6 @@ public interface ImagesService {
     Optional<Images> findImageByIdFK(Long imageId, ActionTypeImage actionTypeImage);
     void deleteImageDetailById(Long imageId);
     Optional<ImageDetail> findImageDetailById(Long imageId);
+    Optional<Images> findImagesByIdRoom(Long idRoom);
+    Optional<Images> findImagesByIdHotel(Long idHotel);
 }

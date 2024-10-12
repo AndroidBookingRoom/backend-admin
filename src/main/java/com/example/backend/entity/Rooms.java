@@ -31,7 +31,7 @@ public class Rooms extends BaseAudits{
     private Integer numberOfBedrooms;
 
     @Column(name = "number_of_beds")
-    private Integer nummberOfBeds;
+    private Integer numberOfBeds;
 
     @Column(name = "view_direction")
     private String viewDirection;

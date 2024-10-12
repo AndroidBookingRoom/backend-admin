@@ -15,4 +15,6 @@ public interface HotelService {
     ResponseHotelDTO findHotelById(Long id);
 
     void deleteHotelByListId(List<Long> ids);
+
+    List<ResponseHotelDTO> getAllListHotels();
 }

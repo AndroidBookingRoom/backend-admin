@@ -2,17 +2,15 @@ package com.example.backend.controllers;
 
 import com.example.backend.domain.Response;
 import com.example.backend.domain.request.RequestRoomDTO;
-import com.example.backend.domain.request.RequestTypeRoomDTO;
 import com.example.backend.services.RoomService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -30,6 +28,17 @@ public class RoomController {
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public @ResponseBody Response getListRoom(RequestRoomDTO request){
         return Response.success().withData(roomService.getDataTables(request));
+    }
+
+    @RequestMapping(path = "/find-by-id", method = RequestMethod.GET)
+    public @ResponseBody Response findRoomByHotel(@RequestParam Long id) {
+        return Response.success().withData(roomService.findRoomById(id));
+    }
+
+    @RequestMapping(path = "/deletes", method = RequestMethod.DELETE)
+    public @ResponseBody Response deleteListRoom(@RequestParam List<Long> ids){
+        roomService.deleteRoomByListId(ids);
+        return Response.success();
     }
 
 }

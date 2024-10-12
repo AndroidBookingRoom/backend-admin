@@ -16,4 +16,6 @@ public interface TypeHotelService {
     void deletesTypeHotel(List<Long> ids);
 
     List<ResponseTypeHotelDTO> getListTypeHotelActive();
+
+    List<ResponseTypeHotelDTO> getListTypeHotelActiveByHotelId(Long hotelId);
 }

@@ -16,6 +16,7 @@ import com.example.backend.repositorys.ImageDetailRepository;
 import com.example.backend.repositorys.ImagesRepository;
 import com.example.backend.services.CommonService;
 import com.example.backend.services.HotelService;
+import com.example.backend.services.ImagesService;
 import com.example.backend.services.MinioService;
 import com.example.backend.utils.enums.ActionTypeImage;
 import com.google.gson.Gson;
@@ -30,25 +31,25 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HotelServiceImpl implements HotelService {
-    final MinioService minioService;
     final HotelRepository hotelRepository;
     final CommonService commonService;
-    final ImageDetailRepository imageDetailRepository;
-    final ImagesRepository imagesRepository;
+    final ImagesService imagesService;
     final VfData vfData;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdate(RequestHotelDTO requestDTO) {
-//        log.info("[HOTEL SERVICE IMPL] Start saveOrUpdate with request: {}", CommonUtils.convertObjectToStringJson(requestDTO));
+        log.info("[HOTEL SERVICE IMPL] Start saveOrUpdate with request:id: {}", CommonUtils.convertObjectToStringJson(requestDTO.getId()));
         Hotel hotel;
         if (CommonUtils.isEmpty(requestDTO.getId())) {
             //handle create
@@ -83,9 +84,9 @@ public class HotelServiceImpl implements HotelService {
                     String.format("Không tìm thấy khách sạn với id:%s", id));
         }
         ResponseHotelDTO response = listData.get(0);
-        Images image = imagesRepository.findById(response.getId()).orElse(null);
+        Images image = imagesService.findImagesByIdHotel(response.getId()).orElse(null);
         if (!CommonUtils.isEmpty(image)) {
-            List<ImageDetail> imageDetails = imageDetailRepository.findByIdImages(image.getId());
+            List<ImageDetail> imageDetails = imagesService.findAllImagesDetailsByImageId(image.getId());
             List<ResponseImageDTO> images = new ArrayList<>();
             for (ImageDetail item : imageDetails) {
                 ResponseImageDTO it = ResponseImageDTO.builder()
@@ -102,17 +103,35 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public List<ResponseHotelDTO> getAllListHotels() {
+        return hotelRepository.findAllHotel(vfData);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteHotelByListId(List<Long> ids) {
         checkHotelDelete();
         for (Long id : ids) {
-            if (hotelRepository.findById(id).isPresent()){
+            Hotel hotel = hotelRepository.findById(id).orElse(null);
+            if (!CommonUtils.isEmpty(hotel)) {
+                handleDeleteImageByIdHotel(hotel.getId());
                 hotelRepository.deleteById(id);
             }else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Not Found Hotel with id: %s", id));
             }
         }
     }
+
+    private void handleDeleteImageByIdHotel(Long idHotel){
+        Images images = imagesService.findImagesByIdHotel(idHotel).orElse(null);
+        if (!CommonUtils.isEmpty(images)){
+            List<ImageDetail> imageDetails = imagesService.findAllImagesDetailsByImageId(images.getId());
+            List<Long> lstIdDel = imageDetails.stream().map(ImageDetail::getId).collect(Collectors.toList());
+            commonService.handleDeleteImageByListIdImageDetail(lstIdDel,
+                    ActionTypeImage.HOTEL, idHotel);
+        }
+    }
+
 
     private void checkHotelDelete() {}
 
@@ -135,6 +154,8 @@ public class HotelServiceImpl implements HotelService {
         hotel.setAddress(request.getAddress());
         hotel.setLocation(request.getLocation());
         hotel.setService(request.getService());
+        if (!CommonUtils.isNullOrEmpty(request.getListImageDelete()) || !CommonUtils.isEmpty(request.getFileImages()))
+            hotel.setUpdateDate(LocalDateTime.now());
         return hotelRepository.save(hotel);
     }
 }

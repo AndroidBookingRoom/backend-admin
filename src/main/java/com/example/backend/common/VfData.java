@@ -20,7 +20,17 @@ public interface VfData {
      * @param <T>
      */
     public <T> DataTableResults<T> findPaginationQuery(String nativeQuery, String orderBy, List<Object> paramList, Class obj);
-//    public <T> DataTableResults<T> findPaginationQuery(String nativeQuery, String orderBy, Map<String, String> paramList, Class obj);
+
+    /**
+     *
+     * @param nativeQuery
+     * @param orderBy
+     * @param paramList
+     * @param obj
+     * @return
+     * @param <T>
+     */
+    public <T> List<T> findAllData(String nativeQuery, String orderBy, List<Object> paramList, Class obj);
 
 
     /**

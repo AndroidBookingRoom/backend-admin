@@ -18,27 +18,50 @@ public interface RoomRepository  extends JpaRepository<Rooms, Long> {
     default DataTableResults<ResponseRoomDTO> getDatatable(VfData vfData, RequestRoomDTO request) {
         List<Object> paramList = new ArrayList<>();
         String strSql = "SELECT" + " r.id as id," +
-                "   td.name as typeBedName," +
+                "   tb.name as typeBedName," +
                 "   tr.name as typeRoomName," +
                 "   ht.name_hotel as nameHotel," +
                 "   r.number_of_bedrooms as numberOfBedRooms," +
                 "   r.number_of_beds as numberOfBeds," +
                 "   r.view_direction as viewDirection," +
                 "   r.create_date as createDate," +
-                "   r.updateDate as updateDate" +
+                "   r.update_date as updateDate" +
                 " FROM rooms r" +
-                " inner join type_bed tb on tb.id = r.type_bed" +
-                " inner join type_room tr on tr.id = r.type_room" +
-                " inner join hotel ht on ht.id = r.id_hotel" +
-                " inner join images img on img.id_room = r.id";
-//                " inner join image_detail imgd on imgd.id_images = img.id";
+                " inner join type_bed tb on tb.id = r.type_bed AND tb.use_yn = 1" +
+                " inner join type_room tr on tr.id = r.type_room AND tr.use_yn = 1 " +
+                " inner join hotel ht on ht.id = r.id_hotel";
         StringBuilder strCondition = new StringBuilder("    WHERE 1 = 1");
-//        if (!CommonUtils.isNullOrEmpty(request.getName())){
-//            CommonUtils.filter(request.getName(), strCondition, paramList, "tr.name");
-//        }
-//        if (!CommonUtils.isEmpty(request.getUseYN())){
-//            CommonUtils.filter(request.getUseYN(), strCondition, paramList, "tr.use_yn");
-//        }
+        if (!CommonUtils.isEmpty(request.getIdTypeRoom())){
+            CommonUtils.filter(request.getIdTypeRoom(), strCondition, paramList, "tr.id");
+        }
+        if (!CommonUtils.isEmpty(request.getIdHotel())){
+            CommonUtils.filter(request.getIdHotel(), strCondition, paramList, "ht.id");
+        }
+
+        if (!CommonUtils.isEmpty(request.getIdTypeBed())){
+            CommonUtils.filter(request.getIdTypeBed(), strCondition, paramList, "tb.id");
+        }
+        String orderBy = "  ORDER BY tr.create_date DESC";
+        return vfData.findPaginationQuery(strSql + strCondition.toString(), orderBy, paramList, ResponseRoomDTO.class);
+    }
+
+    default DataTableResults<ResponseRoomDTO> findRoomById(VfData vfData, Long id) {
+        List<Object> paramList = new ArrayList<>();
+        String strSql = "SELECT" + " r.id as id," +
+                "   tb.id as idTypeBed," +
+                "   tr.id as idTypeRoom," +
+                "   ht.id as idHotel," +
+                "   r.number_of_bedrooms as numberOfBedRooms," +
+                "   r.number_of_beds as numberOfBeds," +
+                "   r.view_direction as viewDirection" +
+                " FROM rooms r" +
+                " inner join type_bed tb on tb.id = r.type_bed AND tb.use_yn = 1" +
+                " inner join type_room tr on tr.id = r.type_room AND tr.use_yn = 1" +
+                " inner join hotel ht on ht.id = r.id_hotel";
+        StringBuilder strCondition = new StringBuilder("    WHERE 1 = 1");
+        if (!CommonUtils.isEmpty(id)){
+            CommonUtils.filter(id, strCondition, paramList, "r.id");
+        }
         String orderBy = "  ORDER BY tr.create_date DESC";
         return vfData.findPaginationQuery(strSql + strCondition.toString(), orderBy, paramList, ResponseRoomDTO.class);
     }

@@ -38,4 +38,19 @@ public interface TypeHotelRepository extends JpaRepository<TypeHotel, Long> {
         String orderBy = "  ORDER BY th.create_date DESC";
         return vfData.findPaginationQuery(strSql + strCondition.toString(), orderBy, paramList, ResponseTypeHotelDTO.class);
     }
+
+    default DataTableResults<ResponseTypeHotelDTO> getListTypeHotelActiveByHotelId(VfData vfData, Long hotelId) {
+        List<Object> paramList = new ArrayList<>();
+        String strSql = "SELECT" + " th.id as id," +
+                " th.name as name," +
+                " FROM type_hotel th" +
+                " inner join hotel h on h.type = th.id";
+        StringBuilder strCondition = new StringBuilder("    WHERE 1 = 1");
+        CommonUtils.filter(Boolean.TRUE, strCondition, paramList, "th.use_yn");
+        if (!CommonUtils.isEmpty(hotelId)){
+            CommonUtils.filter(hotelId, strCondition, paramList, "h.id");
+        }
+        String orderBy = "  ORDER BY th.create_date DESC";
+        return vfData.findPaginationQuery(strSql + strCondition.toString(), orderBy, paramList, ResponseTypeHotelDTO.class);
+    }
 }

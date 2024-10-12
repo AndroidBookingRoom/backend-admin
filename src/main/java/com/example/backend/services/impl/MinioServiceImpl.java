@@ -95,9 +95,10 @@ public class MinioServiceImpl implements MinioService {
             Long fileSize = multipartFile.getSize();
             log.info("MinioServiceImpl | getFileType | fileSize : {}", fileSize);
 
-            String objectName = UUID.randomUUID().toString().replaceAll("-", "")
+            String objectName = CommonUtils.getFileNameWithoutExtension(fileName) + "_" + CommonUtils.getFileNameFromLocalDateTime()
                     + Objects.requireNonNull(fileName).substring(fileName.lastIndexOf("."));
             log.info("MinioServiceImpl | getFileType | objectName : {}", objectName);
+
 
             LocalDateTime createdTime = LocalDateTime.now();
             log.info("MinioServiceImpl | getFileType | createdTime : {}", createdTime);

@@ -42,4 +42,9 @@ public class HotelController {
         hotelService.deleteHotelByListId(ids);
         return Response.success();
     }
+
+    @RequestMapping(path = "/getList", method = RequestMethod.GET)
+    public @ResponseBody Response getListTypeHotel(){
+        return Response.success().withData(hotelService.getAllListHotels());
+    }
 }

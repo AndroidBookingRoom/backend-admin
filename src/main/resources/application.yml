@@ -33,7 +33,7 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://103.148.57.233:3306/bookingroom}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:nhanbn98}
-#    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
 
 application:
   security:

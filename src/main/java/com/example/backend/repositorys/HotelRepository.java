@@ -63,4 +63,14 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
         String orderBy = "  ORDER BY ht.create_date DESC";
         return vfData.findPaginationQuery(strSql + strCondition.toString(), orderBy, paramList, ResponseHotelDTO.class);
     }
+
+    default List<ResponseHotelDTO> findAllHotel(VfData vfData) {
+        List<Object> paramList = new ArrayList<>();
+        String strSql = "SELECT" + " ht.id as id," +
+                " ht.name_hotel as nameHotel" +
+                " FROM hotel ht" +
+                " INNER JOIN type_hotel thl on thl.id = ht.type AND thl.use_yn = 1 ";
+        String orderBy = "  ORDER BY ht.create_date DESC";
+        return vfData.findAllData(strSql, orderBy, paramList, ResponseHotelDTO.class);
+    }
 }
